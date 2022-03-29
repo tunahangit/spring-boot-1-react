@@ -1,5 +1,6 @@
 import React , {useState , useEffect} from "react";
 import Post from "../Post/Post"
+import PostForm from "../Post/PostForm";
 
 import {makeStyles} from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
@@ -10,8 +11,7 @@ const useStyles = makeStyles( (theme) => ({
        flexWrap:"wrap",
        justifyContent:"center",
        alignItems:"center",
-       backgroundColor:'#c5cae9 ',
-       height:'100vh'
+       backgroundColor:'#c5cae9 '
    }
 }) );
 
@@ -24,7 +24,7 @@ function Home(){
     const[postList,setPostList] = useState([]);
     const classes=useStyles();
 
-    useEffect( () => {
+    const refreshPost = () =>{
         fetch("/posts")
         .then(res =>res.json())
         .then(
@@ -37,7 +37,11 @@ function Home(){
                 setError(error);
             }
         )
-    } , [])
+    }
+
+    useEffect( () => {
+        refreshPost();
+    } , [postList]) // listede değişiklik olduğunda algıla ve listeyi yenile 
 
     if(error){
         return <div>Error :(</div>
@@ -45,13 +49,14 @@ function Home(){
         return <div>Loading :)</div>
     }else{
         return(
-             <Container fixed className = {classes.container}>
-           
+             <div  className = {classes.container}>
+                <PostForm userId={1} userName={"PostForm"} title={"PostForm Title"} text={"PostForm Test"} refreshPost={refreshPost} ></PostForm> 
 
                 {postList.map(post=>(
-                    <Post userId={post.userId} userName={post.userName} title={post.title} text= {post.text} ></Post>      
+                    <Post postId={post.id} userId={post.userId} userName={post.userName} title={post.title} text={post.text} 
+                    refreshPost={refreshPost} ></Post>      
                 ) )}
-             </Container>
+             </div>
         )
     } 
 
