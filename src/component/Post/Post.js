@@ -14,7 +14,7 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import { Link } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import Comment from "../Comment/Comment";
-import { setRef } from "@material-ui/core";
+import CommentForm from "../Comment/CommentForm";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -141,12 +141,12 @@ function Post(props) {
                         isLoaded? commentList.map(comment => (
                             <Comment userId={1} userName={"user"} text={comment.text}></Comment>
                         )) : "loading"}
-
+                        <CommentForm userId={1} userName={"user"} postId ={postId} setCommentRefresh={setCommentRefresh} >
+                        </CommentForm>
                 </Container>
 
             </Collapse>
         </Card>
-
 
     )
 }
