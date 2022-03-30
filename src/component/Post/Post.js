@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Post(props) {
-    const { userId, postId, userName, title, text } = props;
+    const { userId, postId, userName, title, text , likeList } = props;
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
@@ -56,8 +56,9 @@ function Post(props) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [commentList, setCommentList] = useState([]);
     const [refresh , setRefresh]=useState(false);
+    const [likeCount,setLikeCount]=useState(likeList.length);
     const isInitialMount = useRef(true);
-
+    const [likeId,setLikeId]=useState(null);
 
 
     const setCommentRefresh = () => {
@@ -73,6 +74,16 @@ function Post(props) {
 
     const handleLike = () => {
         setIsLiked(!isLiked);
+        if(!isLiked){
+           saveLike();
+           setLikeCount(likeCount+1);
+        }
+         
+        else{
+           deleteLike();     
+           setLikeCount(likeCount-1);
+        }
+         
     }
 
     const refreshComment = () => {
@@ -91,6 +102,41 @@ function Post(props) {
             setRefresh(false);
     }
 
+    const saveLike = () => {
+        fetch("/likes",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    postId: postId
+                }),
+            })
+            .then((res) => res.json())
+            .catch((err) => console.log(err))
+    }
+
+    const deleteLike = () => {
+        fetch("/likes/"+likeId,
+            {
+                method: "DELETE",
+            })
+          //  .then((res) => res.json())  backend de delete metodu void burada gelen değeri json yapmaya çalışıyor. 
+         //                               ancak gelen bir değer olmadığı için(void) bu kodu kullanmıyoruz.
+            .catch((err) => console.log(err))
+    }
+
+    const checkLikes = () =>{
+       var likeControl= likeList.find((like => like.userId === userId));
+       if(likeControl != null){
+           setLikeId(likeControl.id);
+           setIsLiked(true);
+       }
+       
+    }
+
     useEffect(() => {
 
         if (isInitialMount.current)
@@ -98,6 +144,9 @@ function Post(props) {
         else
             refreshComment();
     }, [refresh])
+
+
+    useEffect( () => {checkLikes()},[])
 
     return (
         <Card className={classes.root}>
@@ -123,6 +172,7 @@ function Post(props) {
                     aria-label="add to favorites">
                     <FavoriteIcon style={isLiked ? { color: "red" } : null} />
                 </IconButton>
+                {likeCount}
                 <IconButton
                     className={clsx(classes.expand, {
                         [classes.expandOpen]: expanded,
