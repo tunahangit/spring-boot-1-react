@@ -24,14 +24,15 @@ const useStyles = makeStyles((theme) => ({
 
 function CommentForm(props) {
     const[text,setText]=useState("");
-    const { userId, userName , postId ,setCommentRefresh} = props;
+    const { userId, username , postId ,setCommentRefresh} = props;
     const classes = useStyles();
 
     const saveComment = () =>{
         fetch("/comments", {
             method:"POST",
-            headers:{
-                "Content-Type":"application/json",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("tokenKey")
             },
             body:JSON.stringify({
                 postId:postId,
@@ -66,7 +67,7 @@ function CommentForm(props) {
                     <InputAdornment position="start">
                         <Link className={classes.link} to={{ pathname: '/users/' + userId }}>
                             <Avatar aria-label="recipe" className={classes.small}>
-                                {userName.charAt(0).toUpperCase()}
+                                {username.charAt(0).toUpperCase()}
                             </Avatar>
                         </Link>
                     </InputAdornment>

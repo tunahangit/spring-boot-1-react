@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 function PostForm(props) {
-    const { userId, userName, refreshPost } = props;
+    const { userId, username, refreshPost } = props;
     const classes = useStyles();
     const [text, setText] = useState("");
     const [title, setTitle] = useState("");
@@ -63,7 +63,8 @@ function PostForm(props) {
             {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization" : localStorage.getItem("tokenKey")
                 },
                 body: JSON.stringify({
                     title: title,
@@ -114,7 +115,7 @@ function PostForm(props) {
                     avatar={
                         <Link className={classes.link} to={{ pathname: '/users/' + userId }}>
                             <Avatar aria-label="recipe" className={classes.avatar}>
-                                {userName.charAt(0).toUpperCase()}
+                                {username.charAt(0).toUpperCase()}
                             </Avatar>
                         </Link>
                     }
