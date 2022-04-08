@@ -42,7 +42,7 @@ function Home() {
     useEffect(() => {
         refreshPost();
     }, []) // listede değişiklik olduğunda algıla ve listeyi yenile 
-
+    
     if (error) {
         return <div>Error :(</div>
     } else if (!isLoaded) {
@@ -54,7 +54,7 @@ function Home() {
 
                 {postList.map(post => (
                     <Post likeList={post.postLikeList} postId={post.id} userId={post.userId} username={post.username} title={post.title} text={post.text}
-                        refreshPost={refreshPost} ></Post>
+                         ></Post>
                 ))}
             </div>
         )
