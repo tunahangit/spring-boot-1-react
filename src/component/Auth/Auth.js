@@ -1,6 +1,7 @@
 import React , {useState} from "react";
 import { FormControl , InputLabel , Input, Button , FormHelperText } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
+import { postWithAuth, PostWithoutAuth } from "../../services/HttpService";
 
 
 function Auth () {
@@ -27,16 +28,9 @@ function Auth () {
     }
 
     const sendRequest = (path) => {
-        fetch("/auth/"+path,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            }),
+        postWithAuth("/auth/"+path , {
+            username: username,
+            password: password
         })
         .then((res) => res.json())
         .then((result) => {localStorage.setItem("tokenKey",result.message);   // backendden gelen tokeni local storege a kaydet.

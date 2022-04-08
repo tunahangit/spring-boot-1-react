@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import Comment from "../Comment/Comment";
 import CommentForm from "../Comment/CommentForm";
+import { postWithAuth } from "../../services/HttpService";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -105,18 +106,10 @@ function Post(props) {
     }
 
     const saveLike = () => {
-        fetch("/likes",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization" : localStorage.getItem("tokenKey")
-                },
-                body: JSON.stringify({
-                    userId: localStorage.getItem("currentUser"),
-                    postId: postId
-                }),
-            })
+        postWithAuth("/likes",{
+            userId: localStorage.getItem("currentUser"),
+            postId: postId
+        })
             .then((res) => res.json())
             .catch((err) => console.log(err))
     }
@@ -203,9 +196,9 @@ function Post(props) {
                 <Container fixed className={classes.container}>
                     {error ? "error" :
                         isLoaded ? commentList.map(comment => (
-                            <Comment userId={1} username={"user"} text={comment.text}></Comment>
+                            <Comment userId={comment.userId} username={comment.username} text={comment.text}></Comment>
                         )) : "loading"}
-                    {disabled ? "" : <CommentForm userId={1} username={"user"} postId={postId} setCommentRefresh={setCommentRefresh} >
+                    {disabled ? "" : <CommentForm userId={localStorage.getItem("currentUser")} username={localStorage.getItem("username")} postId={postId} setCommentRefresh={setCommentRefresh} >
                     </CommentForm>}
                 </Container>
 

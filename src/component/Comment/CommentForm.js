@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, CardContent, InputAdornment, OutlinedInput } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import  Button  from "@material-ui/core/Button";
+import { postWithAuth } from "../../services/HttpService";
 
 const useStyles = makeStyles((theme) => ({
     comment: {
@@ -28,19 +29,11 @@ function CommentForm(props) {
     const classes = useStyles();
 
     const saveComment = () =>{
-        fetch("/comments", {
-            method:"POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization" : localStorage.getItem("tokenKey")
-            },
-            body:JSON.stringify({
-                postId:postId,
+        postWithAuth("/comments" , {
+              postId:postId,
                 userId:userId,
                 text:text
-            }),
-        })   
-
+        })
         .then((res) => res.json())
         .catch((err) => console.log(err))
     }

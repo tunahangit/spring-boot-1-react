@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { List, ListItem, ListItemSecondaryAction, Radio } from "@material-ui/core";
 import { Modal } from "@material-ui/core";
+import { postWithAuth } from "../../services/HttpService";
 
 
 const useStyles = makeStyles({
@@ -31,17 +32,9 @@ function Avatar(props) {
 
 
     const saveAvatar = () => {
-        fetch("/users/"+localStorage.getItem("currentUser"),
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization" : localStorage.getItem("tokenKey")
-                },  
-                body: JSON.stringify({
-                    avatar:selectedValue
-                }),
-            })
+        postWithAuth("/users/"+localStorage.getItem("currentUser"),{
+            avatar:selectedValue
+        })
             .then((res) => res.json())
             .catch((err) => console.log(err))
     }
